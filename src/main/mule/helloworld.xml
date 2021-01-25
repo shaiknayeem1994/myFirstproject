@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c10e3660-9f14-43f6-b946-b5195328071d" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="${https.port}" >
+			<tls:context >
+				<tls:key-store type="jks" path="training.jks" keyPassword="training" password="training" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<api-gateway:autodiscovery apiId="16591993" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="64d17782-37d2-42f2-b262-e4a6c6f7b892" flowRef="helloworldFlow" />
+
+	 <configuration-properties doc:name="Configuration properties" doc:id="a1b0261e-7f6b-4ecf-86b0-9155c913f027" file="properties/${env}.properties" />
+	<flow name="helloworldFlow" doc:id="94ee333e-94af-4b78-8ff3-5a2563795b5e" >
+		<http:listener doc:name="Listener" doc:id="3bf13060-b495-4b17-a483-a229efff969c" config-ref="HTTP_Listener_config" path="/hello"/>
+		<set-payload value="#['Hello world']" doc:name="Set Payload" doc:id="ffb2e32b-0fc7-4a6c-962f-9220282dfb3f" />
+		<logger level="INFO" doc:name="Logger" doc:id="9c027e2c-4a19-41e0-9881-b17467b5891d" message="payload: #[payload]"/>
+	</flow>
+</mule>
